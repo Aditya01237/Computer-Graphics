@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Interactive top-down furniture layout planner built with vanilla JavaScript and WebGL." />
+    <title>Furniture Layout Planner</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">CSE606 · Programming Assignment 1</p>
+          <h1>Furniture Layout Planner</h1>
+        </div>
+        <div class="mode-card" aria-live="polite">
+          <span>Press M to change mode</span>
+          <strong id="modeLabel">01 · Plan</strong>
+          <kbd>M</kbd>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="toolbox" aria-label="Planner controls">
+          <section id="furnitureSection">
+            <div class="section-heading">
+              <h2>Add furniture</h2>
+            </div>
+            <p class="panel-note">Each button adds a piece at the center. Drag it into a room.</p>
+            <div class="furniture-grid">
+              <button type="button" data-spawn="bed">Bed</button>
+              <button type="button" data-spawn="sofa">Sofa</button>
+              <button type="button" data-spawn="dining">Dining set</button>
+              <button type="button" data-spawn="coffee">Coffee table</button>
+              <button type="button" data-spawn="sectional">Sectional</button>
+            </div>
+          </section>
+
+          <section id="selectionSection">
+            <div class="section-heading">
+              <h2>Selected piece</h2>
+            </div>
+            <p id="selectionName" class="empty-state">Select a piece on the plan.</p>
+            <label for="labelInput">Label</label>
+            <input id="labelInput" type="text" maxlength="24" placeholder="e.g. Reading sofa" disabled />
+            <div class="inline-actions">
+              <button id="rotateLeft" type="button" disabled aria-label="Rotate selected object left">↶ 15°</button>
+              <button id="rotateRight" type="button" disabled aria-label="Rotate selected object right">↷ 15°</button>
+            </div>
+            <div class="inline-actions">
+              <button id="scaleDown" type="button" disabled>Smaller −</button>
+              <button id="scaleUp" type="button" disabled>Larger +</button>
+            </div>
+            <div class="transform-readout" id="transformReadout" aria-live="polite">Position — · Rotation — · Scale —</div>
+          </section>
+
+          <section id="savePanel" class="mode-panel" hidden>
+            <div class="section-heading">
+              <h2>Save completed plan</h2>
+            </div>
+            <label for="planName">Plan name</label>
+            <input id="planName" type="text" maxlength="32" value="Ground floor plan" />
+            <button id="savePlan" class="primary-action" type="button">Save this plan</button>
+            <p class="panel-note">The room layout, labels, positions, rotation, and scale are stored in this browser.</p>
+          </section>
+
+          <section id="loadPanel" class="mode-panel" hidden>
+            <div class="section-heading">
+              <h2>Retrieve labelled plan</h2>
+            </div>
+            <label for="savedPlans">Saved plans</label>
+            <select id="savedPlans"></select>
+            <div class="inline-actions">
+              <button id="loadPlan" class="primary-action" type="button">Render plan</button>
+              <button id="deletePlan" type="button">Delete save</button>
+            </div>
+            <p id="savedPlanMeta" class="panel-note">No saved plans yet.</p>
+          </section>
+
+          <details class="shortcuts" id="shortcutsSection">
+            <summary>Keyboard &amp; mouse controls</summary>
+            <dl>
+              <div><dt>Drag</dt><dd>Move selected piece</dd></div>
+              <div><dt>Wheel</dt><dd>Rotate selected piece</dd></div>
+              <div><dt>Shift + wheel</dt><dd>Resize selected piece</dd></div>
+              <div><dt>G</dt><dd>Randomize floor plan</dd></div>
+              <div><dt>Delete</dt><dd>Remove selected piece</dd></div>
+              <div><dt>← / →</dt><dd>Rotate 15°</dd></div>
+              <div><dt>↑ / ↓</dt><dd>Resize</dd></div>
+              <div><dt>M</dt><dd>Plan → Save → Retrieve</dd></div>
+              <div><dt>Escape</dt><dd>Leave a text field</dd></div>
+            </dl>
+          </details>
+        </aside>
+
+        <section class="canvas-panel" aria-label="Floor plan canvas">
+          <div class="canvas-toolbar">
+            <div>
+              <span id="layoutName">Ground floor plan</span>
+            </div>
+            <button id="randomizeButton" type="button">Randomize <kbd>G</kbd></button>
+          </div>
+          <div id="canvasWrap" class="canvas-wrap">
+            <canvas id="glCanvas" tabindex="0" aria-label="Interactive top-down floor plan. Drag to move furniture; arrows rotate and resize."></canvas>
+            <div id="labelLayer" class="label-layer" aria-hidden="true"></div>
+            <div id="canvasMessage" class="canvas-message" aria-live="polite"></div>
+          </div>
+          <p id="planStatus" class="panel-note" aria-live="polite"></p>
+          <details id="retrievedDetails" hidden>
+            <summary>Saved furniture and positions</summary>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Label</th><th>Type</th><th>X</th><th>Y</th><th>Angle</th><th>Scale</th></tr></thead>
+                <tbody id="furnitureRows"></tbody>
+              </table>
+            </div>
+          </details>
+        </section>
+      </main>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>

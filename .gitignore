@@ -1,0 +1,7 @@
+tmp/
+output/
+.openai/
+REPORT_DRAFT.md
+VIDEO_SCRIPT.md
+*.tar.gz
+.DS_Store
